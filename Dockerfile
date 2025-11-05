@@ -7,7 +7,8 @@ WORKDIR /app
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # Copy requirements file
-COPY requirements.txt .
+COPY pyproject.toml .
+COPY uv.lock .
 
 # Install Python dependencies using uv
 RUN uv sync
