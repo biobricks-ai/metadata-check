@@ -19,4 +19,4 @@ COPY validate_metadata.py .
 RUN uv sync --frozen --no-dev
 
 # Set the entrypoint to run within the uv environment
-ENTRYPOINT ["uv", "run", "--directory", "/app", "python", "validate_metadata.py"]
+ENTRYPOINT ["uv", "run", "python", "/app/validate_metadata.py"]
