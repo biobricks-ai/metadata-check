@@ -10,11 +10,10 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 COPY requirements.txt .
 
 # Install Python dependencies using uv
-RUN uv pip install --system --no-cache -r requirements.txt
+RUN uv sync
 
 # Copy validation script
 COPY validate_metadata.py .
 
 # Set the entrypoint
-ENTRYPOINT ["python", "/app/validate_metadata.py"]
-
+ENTRYPOINT ["uv", "run", "python", "/app/validate_metadata.py"]
