@@ -6,15 +6,17 @@ WORKDIR /app
 # Install uv package manager
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
-# Copy requirements file
+# Copy project files
 COPY pyproject.toml .
 COPY uv.lock .
 
-# Install Python dependencies using uv
-RUN uv sync
-
-# Copy validation script
+# Copy validation script (needed before sync for project structure)
 COPY validate_metadata.py .
 
-# Set the entrypoint
-ENTRYPOINT ["uv", "run", "python", "/app/validate_metadata.py"]
+# Install Python dependencies using uv
+# --frozen ensures we use the exact versions from uv.lock
+# --no-dev skips development dependencies
+RUN uv sync --frozen --no-dev
+
+# Set the entrypoint to run within the uv environment
+ENTRYPOINT ["uv", "run", "validate_metadata.py"]
