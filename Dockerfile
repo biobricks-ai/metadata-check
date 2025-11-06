@@ -1,7 +1,5 @@
 FROM python:3.11-slim
 
-# Set working directory
-WORKDIR /app
 
 # Install uv package manager
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
@@ -19,4 +17,5 @@ COPY validate_metadata.py .
 RUN uv sync --frozen --no-dev
 
 # Set the entrypoint to run within the uv environment
-ENTRYPOINT ["uv", "run", "python", "/app/validate_metadata.py"]
+# ENTRYPOINT ["uv", "run", "python", "validate_metadata.py"]
+ENTRYPOINT ["tail", "-f", "/dev/null"]
