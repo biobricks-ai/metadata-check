@@ -14,7 +14,7 @@ wheels = [
 [[package]]
 name = "biobrick-metadata-check"
 version = "1.0.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "jsonschema" },
     { name = "pyarrow" },
