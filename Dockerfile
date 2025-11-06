@@ -15,5 +15,5 @@ RUN uv sync --directory "/github/workspace/" --frozen --no-dev
 RUN ls /github/workspace/
 
 # Set the entrypoint to run within the uv environment
-ENTRYPOINT ["uv", "run", "python", "validate_metadata.py"]
+ENTRYPOINT ["uv", "run", "python", "/github/workspace/validate_metadata.py"]
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
