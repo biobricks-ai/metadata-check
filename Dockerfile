@@ -5,11 +5,7 @@ FROM python:3.13-slim
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # Copy project files
-COPY pyproject.toml .
-COPY uv.lock .
-
-# Copy validation script (needed before sync for project structure)
-COPY validate_metadata.py .
+ADD ["pyproject.toml", "uv.lock", "validate_metadata.py", "./"]
 
 # Install Python dependencies using uv
 # --frozen ensures we use the exact versions from uv.lock
