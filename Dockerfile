@@ -12,7 +12,7 @@ ADD ["pyproject.toml", "uv.lock", "validate_metadata.py", "/github/workspace/"]
 # --no-dev skips development dependencies
 RUN uv sync --directory "/github/workspace/" --frozen --no-dev
 
-RUN ls
+RUN ls /github/workspace/
 
 # Set the entrypoint to run within the uv environment
 ENTRYPOINT ["uv", "run", "python", "validate_metadata.py"]
