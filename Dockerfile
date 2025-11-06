@@ -9,6 +9,3 @@ ADD ["pyproject.toml", "uv.lock", "validate_metadata.py", "./"]
 
 # Install Python dependencies using uv
 RUN uv sync --frozen
-
-# Set the entrypoint to run within the uv environment
-ENTRYPOINT ["uv", "run", "python", "validate_metadata.py"]
