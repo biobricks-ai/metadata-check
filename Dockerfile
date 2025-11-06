@@ -10,4 +10,4 @@ COPY ["pyproject.toml", "uv.lock", "scripts/validate_metadata.py", "./"]
 # Install Python dependencies using uv
 RUN uv sync --frozen
 
-ENTRYPOINT [ "uv", "run", "python", "./validate_metadata.py" ]
+ENTRYPOINT [ "uv", "run", "python", "/validate_metadata.py" ]
