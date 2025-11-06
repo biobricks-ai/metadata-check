@@ -1,5 +1,5 @@
 name: Build and Push to GHCR
-on: [release]
+on: [release, workflow_dispatch]
 jobs:
     check-push:
         runs-on: ubuntu-latest
