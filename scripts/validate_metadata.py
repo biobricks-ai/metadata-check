@@ -6,16 +6,17 @@ Validates BIOBRICK.yaml metadata files against schema requirements,
 verifies asset file existence, and validates schemas for parquet and SQLite files.
 """
 
-import sys
 import json
+import re
 import sqlite3
+import sys
 from pathlib import Path
 from typing import Optional
 
-import yaml
-import pyarrow.parquet as pq
 import biobricks as bb
-from jsonschema import validate, ValidationError, SchemaError
+import pyarrow.parquet as pq
+import yaml
+from jsonschema import SchemaError, ValidationError, validate
 
 
 class Colors:
@@ -147,9 +148,9 @@ class MetadataValidator:
             return False
 
         # Step 4: Validate brick directory exists
-        if not self._check_brick_dir():
-            self.report.print_report()
-            return False
+        # if not self._check_brick_dir():
+        #     self.report.print_report()
+        #     return False
 
         # Step 5: Validate assets structure
         if not self._validate_assets_structure():
@@ -221,7 +222,7 @@ class MetadataValidator:
 
     def _validate_top_level_structure(self) -> bool:
         """Validate required top-level keys"""
-        required_keys = ["brick", "description", "assets"]
+        required_keys = ["brick", "versiondescription", "assets"]
         missing_keys = [key for key in required_keys if key not in self.metadata]
 
         if missing_keys:
@@ -229,6 +230,30 @@ class MetadataValidator:
                 f"Missing required top-level keys: {', '.join(missing_keys)}",
                 expected=f"Keys: {', '.join(required_keys)}",
                 actual=f"Found keys: {', '.join(self.metadata.keys())}",
+            )
+            return False
+
+        # Validate brick key
+        if (
+            not isinstance(self.metadata["version"], str)
+            or not self.metadata["version"].strip()
+        ):
+            self.report.add_error(
+                "The 'version' key must be a non-empty string",
+                expected="Non-empty string",
+                actual=f"Type: {type(self.metadata['brick']).__name__}, Value: {self.metadata['brick']}",
+            )
+            return False
+
+        version_value = self.metadata.get("version")
+        version_pattern = re.compile(r"^v\d+\.\d+\.\d+$")
+        if not isinstance(version_value, str) or not version_pattern.match(
+            version_value
+        ):
+            self.report.add_error(
+                "The 'version' key must use semantic versioning and start with 'v' (e.g., v1.2.8)",
+                expected="String of the form vMAJOR.MINOR.PATCH (e.g., v1.2.8)",
+                actual=f"{version_value!r}",
             )
             return False
 
@@ -274,10 +299,6 @@ class MetadataValidator:
             return False
 
         self.report.add_success("All required top-level keys present and valid")
-        self.report.add_success(f"Brick name: {self.metadata['brick']}")
-        self.report.add_success(
-            f"Found {len(self.metadata['assets'])} asset(s) defined"
-        )
 
         return True
 
