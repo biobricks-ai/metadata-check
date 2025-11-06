@@ -380,28 +380,28 @@ class MetadataValidator:
                 self.report.add_success(f"Asset file exists: {asset_path}")
 
     def _validate_asset_counts(self):
-        """Validate that the number of .parquet and .hdt files matches assets in YAML"""
+        """Validate that the number of .parquet and .sqlite files matches assets in YAML"""
         # Count files in brick directory
         parquet_files = set()
-        hdt_files = set()
+        sqlite_files = set()
 
         for file_path in self.brick_dir.rglob("*"):
             if file_path.is_file():
                 rel_path = file_path.relative_to(self.brick_dir)
                 if str(rel_path).endswith(".parquet"):
                     parquet_files.add(str(rel_path))
-                elif str(rel_path).endswith(".hdt"):
-                    hdt_files.add(str(rel_path))
+                elif str(rel_path).endswith(".sqlite"):
+                    sqlite_files.add(str(rel_path))
 
         # Count assets in YAML
         yaml_parquet = set()
-        yaml_hdt = set()
+        yaml_sqlite = set()
 
         for asset_path in self.metadata["assets"].keys():
             if asset_path.endswith(".parquet"):
                 yaml_parquet.add(asset_path)
-            elif asset_path.endswith(".hdt"):
-                yaml_hdt.add(asset_path)
+            elif asset_path.endswith(".sqlite"):
+                yaml_sqlite.add(asset_path)
 
         # Compare parquet files
         if parquet_files != yaml_parquet:
@@ -411,14 +411,14 @@ class MetadataValidator:
             if missing_in_yaml:
                 self.report.add_error(
                     "Found .parquet files in brick directory not listed in YAML",
-                    expected=f"All parquet files listed in assets",
+                    expected="All parquet files listed in assets",
                     actual=f"Missing from YAML: {', '.join(sorted(missing_in_yaml))}",
                 )
 
             if extra_in_yaml:
                 self.report.add_error(
                     "Found .parquet files listed in YAML but not in brick directory",
-                    expected=f"All YAML assets exist as files",
+                    expected="All YAML assets exist as files",
                     actual=f"Not found in brick dir: {', '.join(sorted(extra_in_yaml))}",
                 )
         else:
@@ -427,28 +427,28 @@ class MetadataValidator:
                     f"All {len(parquet_files)} .parquet file(s) accounted for"
                 )
 
-        # Compare hdt files
-        if hdt_files != yaml_hdt:
-            missing_in_yaml = hdt_files - yaml_hdt
-            extra_in_yaml = yaml_hdt - hdt_files
+        # Compare sqlite files
+        if sqlite_files != yaml_sqlite:
+            missing_in_yaml = sqlite_files - yaml_sqlite
+            extra_in_yaml = yaml_sqlite - sqlite_files
 
             if missing_in_yaml:
                 self.report.add_error(
-                    "Found .hdt files in brick directory not listed in YAML",
-                    expected=f"All hdt files listed in assets",
+                    "Found .sqlite files in brick directory not listed in YAML",
+                    expected="All sqlite files listed in assets",
                     actual=f"Missing from YAML: {', '.join(sorted(missing_in_yaml))}",
                 )
 
             if extra_in_yaml:
                 self.report.add_error(
-                    "Found .hdt files listed in YAML but not in brick directory",
-                    expected=f"All YAML assets exist as files",
+                    "Found .sqlite files listed in YAML but not in brick directory",
+                    expected="All YAML assets exist as files",
                     actual=f"Not found in brick dir: {', '.join(sorted(extra_in_yaml))}",
                 )
         else:
-            if hdt_files:
+            if sqlite_files:
                 self.report.add_success(
-                    f"All {len(hdt_files)} .hdt file(s) accounted for"
+                    f"All {len(sqlite_files)} .sqlite file(s) accounted for"
                 )
 
     def _validate_schemas(self):
@@ -480,7 +480,7 @@ class MetadataValidator:
             self.report.add_error(
                 f"Asset '{asset_path}' schema is not valid JSON: {str(e)}",
                 expected="Valid JSON array",
-                actual=f"JSON parse error at position {e.pos}",
+                actual=schema_str,
             )
             return
 
