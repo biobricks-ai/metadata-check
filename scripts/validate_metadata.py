@@ -7,11 +7,10 @@ verifies asset file existence, and validates schemas for parquet and SQLite file
 """
 
 import sys
-import os
 import json
 import sqlite3
 from pathlib import Path
-from typing import Dict, List, Tuple, Any, Optional
+from typing import Any, Optional
 
 import yaml
 import pyarrow.parquet as pq

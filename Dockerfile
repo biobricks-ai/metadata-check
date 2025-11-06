@@ -5,9 +5,9 @@ FROM python:3.13-slim
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # Copy project files
-COPY ["pyproject.toml", "uv.lock", "validate_metadata.py", "./"]
+COPY ["pyproject.toml", "uv.lock", "scripts/validate_metadata.py", "./"]
 
 # Install Python dependencies using uv
-RUN uv sync --directory "./" --frozen
+RUN uv sync --frozen
 
 ENTRYPOINT [ "uv", "run", "python", "./validate_metadata.py" ]
