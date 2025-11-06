@@ -222,7 +222,7 @@ class MetadataValidator:
 
     def _validate_top_level_structure(self) -> bool:
         """Validate required top-level keys"""
-        required_keys = ["brick", "versiondescription", "assets"]
+        required_keys = ["brick", "version", "description", "assets"]
         missing_keys = [key for key in required_keys if key not in self.metadata]
 
         if missing_keys:
