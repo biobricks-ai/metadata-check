@@ -5,12 +5,14 @@ FROM python:3.13-slim
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # Copy project files
-ADD ["pyproject.toml", "uv.lock", "validate_metadata.py", "./"]
+ADD ["pyproject.toml", "uv.lock", "validate_metadata.py", "/github/workspace/"]
 
 # Install Python dependencies using uv
 # --frozen ensures we use the exact versions from uv.lock
 # --no-dev skips development dependencies
-RUN uv sync --frozen --no-dev
+RUN uv sync --directory "/github/workspace/" --frozen --no-dev
+
+RUN ls
 
 # Set the entrypoint to run within the uv environment
 ENTRYPOINT ["uv", "run", "python", "validate_metadata.py"]
