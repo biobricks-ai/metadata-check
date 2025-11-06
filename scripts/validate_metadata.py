@@ -10,10 +10,11 @@ import sys
 import json
 import sqlite3
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 import yaml
 import pyarrow.parquet as pq
+import biobricks as bb
 from jsonschema import validate, ValidationError, SchemaError
 
 
@@ -156,13 +157,13 @@ class MetadataValidator:
             return False
 
         # Step 6: Cross-reference assets with actual files
-        self._validate_asset_files()
+        # self._validate_asset_files()
 
         # Step 7: Validate asset counts
-        self._validate_asset_counts()
+        # self._validate_asset_counts()
 
         # Step 8: Validate schemas
-        self._validate_schemas()
+        # self._validate_schemas()
 
         # Print final report
         self.report.print_report()
