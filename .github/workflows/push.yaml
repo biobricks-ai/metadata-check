@@ -1,0 +1,24 @@
+name: Build and Push to GHCR
+on: [release]
+jobs:
+    check-push:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Docker meta
+              id: meta
+              uses: docker/metadata-action@v5
+              with:
+                images: |
+                    ghcr.io/${{ github.repository }}
+
+            - name: Login to GitHub Container Registry
+              shell: bash
+              run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            - name: Build and push Docker Image
+              uses: docker/build-push-action@v6
+              with:
+                context: .
+                push: true
+                tags: ${{ steps.meta.outputs.tags }}
+                labels: ${{ steps.meta.outputs.labels }}
