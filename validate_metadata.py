@@ -679,7 +679,7 @@ class MetadataValidator:
 def main():
     """Main entry point"""
     if len(sys.argv) < 2:
-        repo_path = "."
+        repo_path = "/github/workspace"
     else:
         repo_path = sys.argv[1]
 
