@@ -1,5 +1,5 @@
 name: Build and Push to GHCR
-on: [push, release, workflow_dispatch]
+on: [push, workflow_dispatch]
 jobs:
     check-push:
         name: Push the check to GHCR
